@@ -13,7 +13,7 @@ def index():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json(force=True)
-    text = data['queryResult']['queryText']
+    text = [data['queryResult']['queryText']]
     encoded = tfidf.transform(text)
     prediction = loaded_model.predict(encoded)[0]
     proba = loaded_model.predict_proba(encoded).tolist()
@@ -21,10 +21,10 @@ def webhook():
         "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
         "source": "webhook"
     }
-    #if(prediction == 0):
-    #    response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
-    #else:
-    #    response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
+    if(prediction == 0):
+        response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
+    else:
+        response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
     return({
         "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
         "source": "webhook"
