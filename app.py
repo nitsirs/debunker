@@ -14,7 +14,7 @@ def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
     return {
-        "fulfillmentText": 'This is from the replit webhook',
+        "fulfillmentText": text,
         "source": 'webhook'
     }
 
