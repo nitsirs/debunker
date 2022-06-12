@@ -18,17 +18,15 @@ def webhook():
     prediction = loaded_model.predict(encoded)[0]
     proba = loaded_model.predict_proba(encoded).tolist()
     response = {
-        "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
         "source": "webhook"
     }
-    if(prediction == 0):
+    if(abs(proba[0]-proba[1]) <= 0.5):
+        response["fulfillmentText"] = "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
+    elif(prediction == 0):
         response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
-    else:
+    elif(prediction ==1):
         response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
-    return({
-        "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
-        "source": "webhook"
-    })
+    return(response)
 
 
 @app.route('/classifier_api', methods=['POST'])
