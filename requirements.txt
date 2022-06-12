@@ -3,7 +3,6 @@ pythainlp
 joblib
 gunicorn
 Flask
-algoliasearch
 spacy-universal-sentence-encoder
 spacy
 tensorflow
