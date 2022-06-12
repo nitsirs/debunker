@@ -12,6 +12,8 @@ def index():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    loaded_model = joblib.load("model")
+    tfidf = joblib.load("tfidf")   
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
     encoded = tfidf.transform(text)
