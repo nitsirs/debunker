@@ -21,11 +21,14 @@ def webhook():
         "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
         "source": "webhook"
     }
-    if(prediction == 0):
-        response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
-    else:
-        response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
-    return(response)
+    #if(prediction == 0):
+    #    response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
+    #else:
+    #    response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
+    return({
+        "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
+        "source": "webhook"
+    })
 
 
 @app.route('/classifier_api', methods=['POST'])
