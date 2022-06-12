@@ -1,7 +1,8 @@
-from flask import Flask,request, url_for, redirect, render_template, jsonify
+from flask import Flask, request, url_for, redirect, render_template, jsonify
 import joblib
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
@@ -12,9 +13,13 @@ def index():
 def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
-    return(text)
+    return {
+        "fulfillmentText": 'This is from the replit webhook',
+        "source": 'webhook'
+    }
 
-@app.route('/classifier_api',methods=['POST'])
+
+@app.route('/classifier_api', methods=['POST'])
 def classifier_api():
     req = request.get_json(force=True)
     text = [req['text']]
@@ -23,7 +28,8 @@ def classifier_api():
     encoded = tfidf.transform(text)
     prediction = loaded_model.predict(encoded)[0]
     proba = loaded_model.predict_proba(encoded).tolist()
-    return jsonify(result = int(prediction), proba=proba)
+    return jsonify(result=int(prediction), proba=proba)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
