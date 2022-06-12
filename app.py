@@ -21,7 +21,7 @@ def webhook():
         "source": "webhook"
     }
     print(proba)
-    if(abs(proba[0][0]-proba[0][1]) <= 0.2):
+    if(abs(proba[0][0]-proba[0][1]) <= 0.05):
         response["fulfillmentText"] = "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
     elif(prediction == 0):
         response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
