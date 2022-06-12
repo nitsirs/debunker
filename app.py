@@ -13,6 +13,7 @@ def index():
 def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
+    
     return {
         "fulfillmentText": text,
         "source": 'webhook'
