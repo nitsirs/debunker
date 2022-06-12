@@ -13,11 +13,20 @@ def index():
 def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
-    
-    return {
-        "fulfillmentText": text,
-        "source": 'webhook'
+    loaded_model = joblib.load("model")
+    tfidf = joblib.load("tfidf")
+    encoded = tfidf.transform(text)
+    prediction = loaded_model.predict(encoded)[0]
+    proba = loaded_model.predict_proba(encoded).tolist()
+    response = {
+        "fulfillmentText": "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ",
+        "source": "webhook"
     }
+    if(prediction == 0):
+        response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
+    else:
+        response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
+    return(response)
 
 
 @app.route('/classifier_api', methods=['POST'])
