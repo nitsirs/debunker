@@ -8,3 +8,4 @@ pandas
 numpy
 spacy
 spacy-universal-sentence-encoder
+tensorflow_text
