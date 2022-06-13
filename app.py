@@ -1,24 +1,27 @@
 from flask import Flask, request, url_for, redirect, render_template, jsonify
 import joblib
 import tensorflow as tf
-import spacy_universal_sentence_encoder
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import linear_kernel
+import tensorflow_hub as hub
 
-#TODO: https://medium.com/analytics-vidhya/build-your-semantic-document-search-engine-with-tf-idf-and-google-use-c836bf5f27fb
+
 app = Flask(__name__)
 loaded_model = joblib.load("model")
 tfidf = joblib.load("tfidf")
 imported = tf.saved_model.load('TrainUSE')
 use_model =imported.v.numpy()
-nlp = spacy_universal_sentence_encoder.load_model('xx_use_md')
+module_url = 'https://tfhub.dev/google/universal-sentence-encoder-multilingual/3'
+use = hub.load(module_url)
+def embed(input):
+    return use(input)
 df_news = pd.read_csv('df_news.csv')
 
 def SearchDocument(query):
     q =query
     # embed the query for calcluating the similarity
-    Q_Train =[nlp(q).vector]
+    Q_Train =[embed(q).vector]
     
     #imported_m = tf.saved_model.load('/home/zettadevs/GoogleUSEModel/TrainModel')
     #loadedmodel =imported_m.v.numpy()

@@ -3,6 +3,6 @@ pythainlp
 joblib
 gunicorn
 Flask
-spacy-universal-sentence-encoder
-spacy
 tensorflow-cpu
+tensorflow-text==2.8.*
+tensorflow-hub
