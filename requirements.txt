@@ -4,5 +4,7 @@ joblib
 gunicorn
 Flask
 tensorflow-cpu
-tensorflow-text==2.8.*
-tensorflow-hub
+pandas
+numpy
+spacy
+spacy-universal-sentence-encoder

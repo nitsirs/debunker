@@ -4,7 +4,8 @@ import tensorflow as tf
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import linear_kernel
-import tensorflow_hub as hub
+import spacy_universal_sentence_encoder
+import json
 
 
 app = Flask(__name__)
@@ -12,24 +13,17 @@ loaded_model = joblib.load("model")
 tfidf = joblib.load("tfidf")
 imported = tf.saved_model.load('TrainUSE')
 use_model =imported.v.numpy()
-module_url = 'https://tfhub.dev/google/universal-sentence-encoder-multilingual/3'
-use = hub.load(module_url)
-def embed(input):
-    return use(input)
+nlp = spacy_universal_sentence_encoder.load_model('xx_use_md')
+
 df_news = pd.read_csv('df_news.csv')
 
 def SearchDocument(query):
     q =query
-    # embed the query for calcluating the similarity
-    Q_Train =[embed(q).vector]
+    Q_Train =[nlp(q).vector]
     
-    #imported_m = tf.saved_model.load('/home/zettadevs/GoogleUSEModel/TrainModel')
-    #loadedmodel =imported_m.v.numpy()
-    # Calculate the Similarity
     linear_similarities = linear_kernel(Q_Train, use_model).flatten() 
-    #Sort top 10 index with similarity score
     Top_index_doc = linear_similarities.argsort()[:-11:-1]
-    # sort by similarity score
+
     linear_similarities.sort()
     a = pd.DataFrame()
     for i,index in enumerate(Top_index_doc):
@@ -53,12 +47,17 @@ def index():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.get_json(force=True)
-    text = [data['queryResult']['queryText']]
-    
-    encoded = tfidf.transform(text)
+    text = data['queryResult']['queryText']
+    search_result = SearchDocument(text)
+    search_result = search_result.to_json(orient="split")
+    parsed = json.loads(search_result)
+    parsed = json.dumps(parsed, indent=4)
+
+    encoded = tfidf.transform([text])
     prediction = loaded_model.predict(encoded)[0]
     proba = loaded_model.predict_proba(encoded).tolist()
     response = {
+        "search_result" : parsed,
         "source": "webhook"
     }
     print(proba)
@@ -74,7 +73,7 @@ def webhook():
 @app.route('/classifier_api', methods=['POST'])
 def classifier_api():
     req = request.get_json(force=True)
-    text = [req['text']]
+    text = req['text']
     encoded = tfidf.transform(text)
     prediction = loaded_model.predict(encoded)[0]
     proba = loaded_model.predict_proba(encoded).tolist()
