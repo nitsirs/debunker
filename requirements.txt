@@ -5,4 +5,4 @@ gunicorn
 Flask
 spacy-universal-sentence-encoder
 spacy
-tensorflow
+tensorflow-cpu
