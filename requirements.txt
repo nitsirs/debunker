@@ -9,3 +9,4 @@ numpy
 spacy
 spacy-universal-sentence-encoder
 tensorflow_text
+https://github.com/MartinoMensio/spacy-universal-sentence-encoder/releases/download/v0.4.3/xx_use_md-0.4.3.tar.gz#xx_use_md-0.4.3
