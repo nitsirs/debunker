@@ -49,24 +49,36 @@ def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
     search_result = SearchDocument(text)
-    search_result = search_result.to_json(orient="split")
-    parsed = json.loads(search_result)
-    parsed = json.dumps(parsed, indent=4)
-
-    encoded = tfidf.transform([text])
-    prediction = loaded_model.predict(encoded)[0]
-    proba = loaded_model.predict_proba(encoded).tolist()
+    search_result = search_result[search_result['Score']>=0.3]
+    cards = []
+    for i in range(search_result.shape[0]):
+        card = {
+            "title": search_result.iloc[i,:].headline,
+            "subtitle": search_result.iloc[i,:].tag,
+            "buttons": [
+                    {
+                    "title": "ดูเพิ่มเติม",
+                    "openUrlAction": {
+                    "url": search_result.iloc[i,:].url
+                    }
+                }
+            ],
+        }
+        cards.append({"card":card})
     response = {
-        "search_result" : parsed,
+        "fulfillmentMessages": cards,
         "source": "webhook"
     }
-    print(proba)
-    if(abs(proba[0][0]-proba[0][1]) <= 0.2):
-        response["fulfillmentText"] = "บอตน้อยไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
-    elif(prediction == 0):
-        response["fulfillmentText"] = "อันนี้เป็นข่าวจริงครับ"
-    elif(prediction ==1):
-        response["fulfillmentText"] = "อันนี้ข่าวปลอมครับ"
+    if(len(cards) == 0):   
+        encoded = tfidf.transform([text])
+        prediction = loaded_model.predict(encoded)[0]
+        proba = loaded_model.predict_proba(encoded).tolist()
+        if(abs(proba[0][0]-proba[0][1]) <= 0.2):
+            response["fulfillmentMessages"] = [{"text": {"text": ["บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"]}}]
+        elif(prediction == 0):
+            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"]}}]
+        elif(prediction ==1):
+            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"]}}]
     return(response)
 
 
