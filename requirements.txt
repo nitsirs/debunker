@@ -5,4 +5,4 @@ gunicorn
 Flask
 spacy-universal-sentence-encoder
 spacy
-tensorflow-cpu==2.1.0.
+tensorflow-cpu==2.9.1
