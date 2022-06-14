@@ -57,7 +57,7 @@ def webhook():
     text = data['queryResult']['queryText']
     search_result = SearchDocument(text)
     search_result = search_result[search_result['Score']>=0.4]
-    search_result = search_result.replace(np.nan, '', regex=True)
+    search_result = search_result.replace(np.nan, ' ', regex=True)
     # res = search_result.iloc[0,:].headline + '\n' + search_result.iloc[0,:].tag + '\n' + search_result.iloc[0,:].url
     cards = []
     for i in range(search_result.shape[0]):
@@ -65,7 +65,7 @@ def webhook():
             "thumbnailImageUrl": search_result.iloc[i,:].img_src,
             "imageBackgroundColor": "#FFFFFF",
             "title": search_result.iloc[i,:].headline,
-            "text": search_result.iloc[i,:].tag if search_result.iloc[i,:].tag else '',
+            "text": search_result.iloc[i,:].tag,
             "defaultAction": {
                 "type": "uri",
                 "label": "ดูเพิ่มเติม",
