@@ -7,7 +7,6 @@ tensorflow-cpu
 pandas
 numpy
 wheel
-spacy
-spacy-universal-sentence-encoder
-tensorflow_text
+tensorflow-text
+tensorflow-hub
 
