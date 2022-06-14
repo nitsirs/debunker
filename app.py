@@ -62,17 +62,17 @@ def webhook():
     cards = []
     for i in range(search_result.shape[0]):
         card = {
+            "thumbnailImageUrl": search_result.iloc[i,:].img_src,
+            "imageBackgroundColor": "#FFFFFF",
             "title": search_result.iloc[i,:].headline,
-            "subtitle": search_result.iloc[i,:].tag,
-            "imageUri": search_result.iloc[i,:].img_src,
-            "buttons": [
-                    {
-                    "text": "ดูเพิ่มเติม",
-                    "postback": search_result.iloc[i,:].url,
-                }
-            ],
+            "text": search_result.iloc[i,:].tag,
+            "defaultAction": {
+                "type": "uri",
+                "label": "View detail",
+                "uri": search_result.iloc[i,:].url,
+            }
         }
-        cards.append({"card":card})
+        cards.append({card})
     response = {
         "fulfillmentMessages": [
       {
@@ -82,26 +82,7 @@ def webhook():
               "altText": "this is a carousel template",
               "template": {
                 "type": "carousel",
-                "columns": [
-                  {
-                    "thumbnailImageUrl": "https://obs.line-scdn.net/0hUI6fjXe3CmYLHyDer0d1MTdaBAt8MQwucypAUi5IB1MuLEw4YH5MVCweAFF0eEo1PnlNVyweB1Qk",
-                    "imageBackgroundColor": "#FFFFFF",
-                    "title": "this is menu",
-                    "text": "description",
-                    "defaultAction": {
-                      "type": "uri",
-                      "label": "View detail",
-                      "uri": "http://example.com/page/123"
-                    },
-                    "actions": [
-                      {
-                        "type": "uri",
-                        "label": "ดูเพิ่มเติม",
-                        "uri": "http://example.com/page/111"
-                      }
-                    ]
-                  }
-                ],
+                "columns": cards,
                 "imageAspectRatio": "rectangle",
                 "imageSize": "cover"
               }
