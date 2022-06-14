@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import linear_kernel
 import spacy
+import spacy_universal_sentence_encoder
 import json
 
 
@@ -13,7 +14,7 @@ loaded_model = joblib.load("model")
 tfidf = joblib.load("tfidf")
 imported = tf.saved_model.load('TrainUSE')
 use_model =imported.v.numpy()
-nlp = spacy.load('xx_use_md')
+nlp = spacy_universal_sentence_encoder.load_model('xx_use_md')
 
 df_news = pd.read_csv('df_news.csv')
 
