@@ -77,7 +77,7 @@ def webhook():
         "fulfillmentText": res,
         "source": "webhook"
     }
-    if(len(search_result.shape[0]) == 0):   
+    if(search_result.shape[0] == 0):   
         encoded = tfidf.transform([text])
         prediction = loaded_model.predict(encoded)[0]
         proba = loaded_model.predict_proba(encoded).tolist()
