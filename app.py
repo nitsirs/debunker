@@ -57,7 +57,8 @@ def webhook():
     search_result = SearchDocument(text)
     search_result = search_result[search_result['Score']>=0.3]
     cards = []
-    for i in range(search_result.shape[0]):
+    #range(search_result.shape[0])
+    for i in range(1):
         card = {
             "title": search_result.iloc[i,:].headline,
             "subtitle": search_result.iloc[i,:].tag,
