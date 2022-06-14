@@ -40,6 +40,7 @@ def SearchDocument(query):
         except:
           pass
         a.loc[i,'url'] = df_news['url'][index]
+        a.loc[i,'img_src'] = df_news['img_src'][index]
     for j,simScore in enumerate(linear_similarities[:-11:-1]):
         a.loc[j,'Score'] = simScore
     return a
@@ -55,7 +56,7 @@ def webhook():
     data = request.get_json(force=True)
     text = data['queryResult']['queryText']
     search_result = SearchDocument(text)
-    search_result = search_result[search_result['Score']>=0.3]
+    search_result = search_result[search_result['Score']>=0.4]
     search_result = search_result.replace(np.nan, '', regex=True)
     # res = search_result.iloc[0,:].headline + '\n' + search_result.iloc[0,:].tag + '\n' + search_result.iloc[0,:].url
     cards = []
@@ -63,7 +64,7 @@ def webhook():
         card = {
             "title": search_result.iloc[i,:].headline,
             "subtitle": search_result.iloc[i,:].tag,
-            "imageUri": "https://i.ytimg.com/vi/DG95jY8LJtE/maxresdefault.jpg",
+            "imageUri": search_result.iloc[i,:].img_src,
             "buttons": [
                     {
                     "text": "ดูเพิ่มเติม",
