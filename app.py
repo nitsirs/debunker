@@ -68,7 +68,7 @@ def webhook():
             "text": search_result.iloc[i,:].tag,
             "defaultAction": {
                 "type": "uri",
-                "label": "View detail",
+                "label": "ดูเพิ่มเติม",
                 "uri": search_result.iloc[i,:].url,
             }
         }
