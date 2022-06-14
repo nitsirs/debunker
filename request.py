@@ -9,7 +9,7 @@ data = {
     "parameters": {
       "param-name": "param-value"
     },
-    "allRequiredParamsPresent": True,
+    "allRequiredParamsPresent": "true",
     "fulfillmentText": "Response configured for matched intent",
     "fulfillmentMessages": [
       {
