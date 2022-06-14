@@ -70,7 +70,13 @@ def webhook():
                 "type": "uri",
                 "label": "ดูเพิ่มเติม",
                 "uri": search_result.iloc[i,:].url,
-            }
+            },
+            "actions": [
+                {
+                    "type": "uri",
+                    "label": "ดูเพิ่มเติม",
+                    "uri": search_result.iloc[i,:].url
+                }],
         }
         cards.append(card)
     response = {
