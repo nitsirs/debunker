@@ -65,7 +65,7 @@ def webhook():
             "thumbnailImageUrl": search_result.iloc[i,:].img_src,
             "imageBackgroundColor": "#FFFFFF",
             "title": search_result.iloc[i,:].headline,
-            "text": search_result.iloc[i,:].tag,
+            "text": search_result.iloc[i,:].tag if search_result.iloc[i,:].tag else '',
             "defaultAction": {
                 "type": "uri",
                 "label": "ดูเพิ่มเติม",
