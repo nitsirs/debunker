@@ -61,7 +61,7 @@ def webhook():
         card = {
             "title": search_result.iloc[i,:].headline,
             "subtitle": search_result.iloc[i,:].tag,
-            "imageUri": "",
+            "imageUri": "https://i.ytimg.com/vi/DG95jY8LJtE/maxresdefault.jpg",
             "buttons": [
                     {
                     "text": "ดูเพิ่มเติม",
@@ -69,7 +69,7 @@ def webhook():
                 }
             ],
         }
-        cards.append({"card":card})
+        cards.append({"card":card, "platform": "LINE"})
     response = {
         "fulfillmentMessages": cards,
         "source": "webhook"
