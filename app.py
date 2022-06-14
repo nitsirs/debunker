@@ -61,12 +61,11 @@ def webhook():
         card = {
             "title": search_result.iloc[i,:].headline,
             "subtitle": search_result.iloc[i,:].tag,
+            "imageUri": "",
             "buttons": [
                     {
-                    "title": "ดูเพิ่มเติม",
-                    "openUrlAction": {
-                    "url": search_result.iloc[i,:].url
-                    }
+                    "text": "ดูเพิ่มเติม",
+                    "postback": search_result.iloc[i,:].url,
                 }
             ],
         }
