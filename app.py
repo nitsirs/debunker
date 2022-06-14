@@ -72,9 +72,43 @@ def webhook():
                 }
             ],
         }
-        cards.append({"card":card, "platform": "LINE"})
+        cards.append({"card":card})
     response = {
-        "fulfillmentMessages": cards,
+        "fulfillmentMessages": [
+      {
+        "payload": {
+            "line": {
+              "type": "template",
+              "altText": "this is a carousel template",
+              "template": {
+                "type": "carousel",
+                "columns": [
+                  {
+                    "thumbnailImageUrl": "https://obs.line-scdn.net/0hUI6fjXe3CmYLHyDer0d1MTdaBAt8MQwucypAUi5IB1MuLEw4YH5MVCweAFF0eEo1PnlNVyweB1Qk",
+                    "imageBackgroundColor": "#FFFFFF",
+                    "title": "this is menu",
+                    "text": "description",
+                    "defaultAction": {
+                      "type": "uri",
+                      "label": "View detail",
+                      "uri": "http://example.com/page/123"
+                    },
+                    "actions": [
+                      {
+                        "type": "uri",
+                        "label": "ดูเพิ่มเติม",
+                        "uri": "http://example.com/page/111"
+                      }
+                    ]
+                  }
+                ],
+                "imageAspectRatio": "rectangle",
+                "imageSize": "cover"
+              }
+            }
+          }
+      }
+    ],
         #"fulfillmentText": res,
         "source": "webhook"
     }
