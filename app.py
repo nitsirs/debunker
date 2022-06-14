@@ -56,9 +56,10 @@ def webhook():
     text = data['queryResult']['queryText']
     search_result = SearchDocument(text)
     search_result = search_result[search_result['Score']>=0.3]
-    cards = []
-    #range(search_result.shape[0])
-    for i in range(1):
+    search_result = search_result.replace(np.nan, '', regex=True)
+    res = search_result.iloc[0,:].headline + '\n' + search_result.iloc[0,:].tag + '\n' + search_result.iloc[0,:].url
+    '''cards = []
+    for i in range(search_result.shape[0]):
         card = {
             "title": search_result.iloc[i,:].headline,
             "subtitle": search_result.iloc[i,:].tag,
@@ -70,21 +71,25 @@ def webhook():
                 }
             ],
         }
-        cards.append({"card":card, "platform": "LINE"})
+        cards.append({"card":card, "platform": "LINE"})'''
     response = {
-        "fulfillmentMessages": cards,
+        #"fulfillmentMessages": cards,
+        "fulfillmentText": res,
         "source": "webhook"
     }
-    if(len(cards) == 0):   
+    if(len(search_result.shape[0]) == 0):   
         encoded = tfidf.transform([text])
         prediction = loaded_model.predict(encoded)[0]
         proba = loaded_model.predict_proba(encoded).tolist()
         if(abs(proba[0][0]-proba[0][1]) <= 0.2):
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"]}}]
+            response['fulfillmentText'] = "บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
+            #response["fulfillmentMessages"] = [{"text": {"text": ["บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"]}}]
         elif(prediction == 0):
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"]}}]
+            response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"
+            #response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"]}}]
         elif(prediction ==1):
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"]}}]
+            response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"
+            #response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"]}}]
     return(response)
 
 
