@@ -72,7 +72,7 @@ def webhook():
                 "uri": search_result.iloc[i,:].url,
             }
         }
-        cards.append({card})
+        cards.append(card)
     response = {
         "fulfillmentMessages": [
       {
