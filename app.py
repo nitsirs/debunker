@@ -66,7 +66,7 @@ def webhook():
         card = {
             "thumbnailImageUrl": search_result.iloc[i,:].img_src,
             "imageBackgroundColor": "#FFFFFF",
-            "text": search_result.iloc[i,:].headline[:60],
+            "text": search_result.iloc[i,:].headline[:50],
             "defaultAction": {
                 "type": "uri",
                 "label": "ดูเพิ่มเติม",
