@@ -8,6 +8,7 @@ import tensorflow_hub as hub
 import tensorflow_text
 import json
 from pythainlp.summarize import summarize
+from flask import jsonify
 
 
 app = Flask(__name__)
@@ -216,7 +217,7 @@ def webhook():
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ'
             #response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"
 
-    return(json.dumps(response))
+    return(jsonify(response))
 
 
 @app.route('/classifier_api', methods=['POST'])
