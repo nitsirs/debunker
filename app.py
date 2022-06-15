@@ -7,6 +7,7 @@ from sklearn.metrics.pairwise import linear_kernel
 import tensorflow_hub as hub
 import tensorflow_text
 import json
+from pythainlp.summarize import summarize
 
 
 app = Flask(__name__)
@@ -98,19 +99,123 @@ def webhook():
         #"fulfillmentText": res,
         "source": "webhook"
     }
+
+    flex_response = {
+        "fulfillmentMessages": [
+      {
+        "payload": {
+            "line": {
+    "type": "flex",
+    "altText": "Flex Message",
+    "contents": {
+      "type": "bubble",
+      "size": "mega",
+      "header": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "สรุปข่าวต้นฉบับ",
+            "color": "#ffffff",
+            "align": "start",
+            "size": "md",
+            "gravity": "center"
+          },
+          {
+            "type": "text",
+            "text": "เข้าข่ายข่าวลวง x%",
+            "color": "#ffffff",
+            "align": "start",
+            "size": "xs",
+            "gravity": "center",
+            "margin": "lg"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "contents": [
+              {
+                "type": "box",
+                "layout": "vertical",
+                "contents": [
+                  {
+                    "type": "filler"
+                  }
+                ],
+                "width": "70%", # TODO: change width
+                "backgroundColor": "#DE5658",
+                "height": "6px"
+              }
+            ],
+            "height": "6px",
+            "margin": "sm",
+            "backgroundColor": "#FAD2A76E"
+          }
+        ],
+        "backgroundColor": "#FF6B6E",
+        "paddingTop": "19px",
+        "paddingAll": "12px",
+        "paddingBottom": "16px"
+      },
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "verdict", #TODO: get verdict from API
+                "color": "#8C8C8C",
+                "size": "sm",
+                "wrap": "true"
+              }
+            ]
+          }
+        ],
+        "spacing": "md",
+        "paddingAll": "12px"
+      },
+      "styles": {
+        "footer": {
+          "separator": "false"
+        }
+      }
+    }
+  }
+          }
+      }
+    ],
+        #"fulfillmentText": res,
+        "source": "webhook"
+    }
     if(search_result.shape[0] == 0):   
         encoded = tfidf.transform([text])
         prediction = loaded_model.predict(encoded)[0]
+        response = flex_response
         proba = loaded_model.predict_proba(encoded).tolist()
         if(abs(proba[0][0]-proba[0][1]) <= 0.2):
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ'
             #response['fulfillmentText'] = "บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"]}}]
         elif(prediction == 0):
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ'
             #response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"]}}]
         elif(prediction ==1):
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ'
             #response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"
-            response["fulfillmentMessages"] = [{"text": {"text": ["บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"]}}]
+
     return(response)
 
 
