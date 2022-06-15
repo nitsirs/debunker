@@ -171,7 +171,7 @@ def webhook():
                 "text": "verdict", #TODO: get verdict from API
                 "color": "#8C8C8C",
                 "size": "sm",
-                "wrap": "true"
+                "wrap": True
               }
             ]
           }
@@ -199,24 +199,24 @@ def webhook():
         proba = loaded_model.predict_proba(encoded).tolist()
         if(abs(proba[0][0]-proba[0][1]) <= 0.2):
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
-            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่าวลวง '+str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ'
             #response['fulfillmentText'] = "บอตไม่แน่ใจครับ เดี๋ยวรอแอดมินมาตอบนะครับ"
         elif(prediction == 0):
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
-            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่าวลวง '+str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ'
             #response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวจริงครับ อย่างไรก็ตาม ตรวจสอบข้อมูลก่อนแชร์ทุกครั้งนะครับ"
         elif(prediction ==1):
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][0]['text'] = summarize(text, n=1)[:50]
-            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่ายลวง '+str(proba[0][1]*100)+'%'
+            flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][1]['text'] = 'เข้าข่ายข่าวลวง '+str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['header']['contents'][2]['contents'][0]['width'] = str(proba[0][1]*100)+'%'
             flex_response['fulfillmentMessages'][0]['payload']['line']['contents']['body']['contents'][0]['contents'][0]['text'] = 'บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ'
             #response['fulfillmentText'] = "บอตว่าอันนี้น่าจะเป็นข่าวปลอมครับ คอยเฝ้าระวัง ตรวจสอบข้อมูลเพิ่มเติมก่อนแชร์นะครับ"
 
-    return(response)
+    return(json.dumps(response))
 
 
 @app.route('/classifier_api', methods=['POST'])
